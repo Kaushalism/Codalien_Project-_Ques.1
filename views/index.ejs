@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Card</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body> 
+ 
+<div class="container">
+  <h2>Url Monitoring System</h2>
+  <div class="card">
+    <div class="card-body">
+        <form action="/monitoring" method="GET">
+            <div class="form-group">
+              <label for="Url">Enter URL</label>
+              <input type="url" class="form-control" id="url"  placeholder="Enter URL">
+            </div>
+            <div class="dropdown" style="margin-bottom: 10px;">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Selected Frequency :
+                <span id="selected" class="caret">"Please select one"</span></button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">10 secs</a></li>
+                  <li><a class="dropdown-item" href="#">1 min</a></li>
+                  <li><a class="dropdown-item" href="#">5 mins</a></li>
+                  <li><a class="dropdown-item" href="#">10 mins</a></li>
+                  <li><a class="dropdown-item" href="#">15 mins</a></li>
+                  <li><a class="dropdown-item" href="#">1 hr</a></li>
+                  <li><a class="dropdown-item" href="#">4 hrs</a></li>
+                  <li><a class="dropdown-item" href="#">6 hrs</a></li>
+                  <li><a class="dropdown-item" href="#">Daily</a></li>
+                </ul>
+              </div >
+
+              <div id="hidden" style="display: none;">
+              <div class="form-group" >
+                <label for="email">Enter Email</label>
+                <input type="email" class="form-control" name="email" placeholder="Enter Email">
+              </div>
+              <div class="form-group" >
+                <label for="mob">Enter Mobile No.</label>
+                <input type="number" class="form-control" name="mob" placeholder="Enter Mobile No.">
+              </div>
+            </div>
+
+              <button type="button" class="btn btn-primary" id="hid_after" onclick="show()" style="margin-bottom: 10px;">Next</button>
+
+            <button type="submit" class="btn btn-primary" id="hid_btn" style="display: none;">Submit</button>
+          </form>
+          <script>
+              function show(){
+               document.getElementById('hidden').style.display="block";
+               document.getElementById('hid_btn').style.display="block";
+               document.getElementById('hid_after').style.display="none";
+            }
+            $('.dropdown-menu a').click(function(){
+            $('#selected').text($(this).text());
+            });
+          </script>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
