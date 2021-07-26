@@ -1,93 +1,86 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const request = require('request');
 
 //Express configuration
 const app = express();
+app.use(express.json());
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 const PORT = process.env.PORT || 3000;
 
-
-//Main configuration variables
-const urlToCheck = `http://www.google.co.in`;
-const elementsToSearchFor = ['Text you want to watch for', 'imageYouWantToCheckItsExistence.png'];
-const checkingFrequency = 5 * 60000; //first number represent the checkingFrequency in minutes
-
-//SendGrid Email Integration
-const SENDGRID_APY_KEY = 'AA.AAAA_AAAAAAAAAAAAA.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(SENDGRID_APY_KEY);
-const emailFrom = 'aaa@aaa.com';
-const emailsToAlert = ['emailOneToSend@theAlert.com', 'emailTwoToSend@theAlert.com'];
-
-
-const checkingNumberBeforeWorkingOKEmail = 1440 / (checkingFrequency / 60000);   //1 day = 1440 minutes
-let requestCounter = 0;
-
-
-//Main function
-const intervalId = setInterval(function () {
-
-    request(urlToCheck, function (err, response, body) {
-        //if the request fail
-        if (err) {
-            console.log(`Request Error - ${err}`);
-        }
-        else {
-            //if the target-page content is empty
-            if (!body) {
-                console.log(`Request Body Error - ${err}`);
-            }
-            //if the request is successful
-            else {
-
-                //if any elementsToSearchFor exist
-                if (elementsToSearchFor.some((el) => body.includes(el))) {
-
-                    // Email Alert Notification
-                    const msg = {
-                        to: emailsToAlert,
-                        from: emailFrom,
-                        subject: `🔥🔥🔥 Change detected in ${urlToCheck} 🔥🔥🔥`,
-                        html: `Change detected in <a href="${urlToCheck}"> ${urlToCheck} </a>  `,
-                    };
-                    sgMail.send(msg)
-                        .then(()=>{console.log("Alert Email Sent!");})
-                        .catch((emailError)=>{console.log(emailError);});
-                }
-
-            }
-        }
-    });
-
-    requestCounter++;
-
-
-    // "Working OK" email notification logic
-    if (requestCounter > checkingNumberBeforeWorkingOKEmail) {
-
-        requestCounter = 0;
-
-        const msg = {
-            to: emailsToAlert,
-            from: emailFrom,
-            subject: '👀👀👀 Website Change Monitor is working OK 👀👀👀',
-            html: `Website Change Monitor is working OK - <b>${new Date().toLocaleString("en-US", {timeZone: "America/New_York"})}</b>`,
-        };
-        sgMail.send(msg)
-            .then(()=>{console.log("Working OK Email Sent!");})
-            .catch((emailError)=>{console.log(emailError);});
-    }
-
-}, checkingFrequency);
+// app.locals.url = 0;
+// app.locals.frequency;
+// app.locals.email = 0;
+// app.locals.mob = 0;
 
 
 //Index page render
 app.get('/', function (req, res) {
-    res.render('index', null);
+    res.render('index');
 });
+
+app.post('/monitor', (req, res) =>{
+    const {url,frequency,email,mob} = req.body;
+    if(frequency === "Daily"){
+        frequency = 1440;
+    }
+
+
+    //Mainvariables
+
+    let urlToCheck = url;
+    let checkingFrequency = frequency * 60000; //first number represent the checkingFrequency in minutes
+
+    //SendGrid Email
+    const SENDGRID_APY_KEY = 'AA.AAAA_AAAAAAAAAAAAA.AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+    /* sir/madam, i tried to register at sendgrid to get api key, but they are saying to conatct support,
+     i have attached a ss related to that also. so i have written the logic only here. */
+    const sgMail = require('@sendgrid/mail');
+    sgMail.setApiKey(SENDGRID_APY_KEY);
+    const emailFrom = 'ranknitin14@gmail.com';
+    let emailsToAlert = email;
+
+
+    let intervalsPerDay = 1440 / (checkingFrequency / 60000);
+
+    console.log( 'intervals created are ' + intervalsPerDay);
+    //Main function
+    let check_function = setInterval(function () {
+
+        request(urlToCheck, function (err, res, body) {
+            //if the request fail
+            if (err) {
+                console.log(`Request Error - ${err}`);
+                // Email Alert Notification
+                const msg = {
+                    to: emailsToAlert,
+                    from: emailFrom,
+                    subject: `Something Wrong Detected - ${urlToCheck}`,
+                    html: `Something Went Wrong! <a href="${urlToCheck}"> ${urlToCheck} </a> status code is ${res.statusCode} `,
+                };
+                sgMail.send(msg)
+                    .then(()=>{console.log("Alert Email Sent!");})
+                    .catch((emailError)=>{console.log(emailError);});
+            }else{
+                console.log("test : the status code recieved is (website is working fine!) : " + res.statusCode);
+            }
+        });
+    }, checkingFrequency);
+
+
+    res.render("service_started", {test : app.locals.url});
+
+});
+
+
+
+//To test Global Access of variable
+app.get("/test", (req, res) =>{
+    res.send(app.locals.frequency);
+})
+
+
 
 
 //Server start

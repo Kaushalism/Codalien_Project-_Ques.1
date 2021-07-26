@@ -8,35 +8,42 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body> 
  
-<div class="container">
-  <h2>Url Monitoring System</h2>
+<div class="container" style="margin: auto;">
+  <h1><b>Url Monitoring System</b></h1>
   <div class="card">
     <div class="card-body">
-        <form action="/monitoring" method="GET">
+
+        <form action="/monitor" method="POST">
             <div class="form-group">
               <label for="Url">Enter URL</label>
-              <input type="url" class="form-control" id="url"  placeholder="Enter URL">
+              <input type="url" class="form-control" id="url" name="url"  placeholder="Enter URL">
             </div>
-            <div class="dropdown" style="margin-bottom: 10px;">
-                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Selected Frequency :
-                <span id="selected" class="caret">"Please select one"</span></button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">10 secs</a></li>
-                  <li><a class="dropdown-item" href="#">1 min</a></li>
-                  <li><a class="dropdown-item" href="#">5 mins</a></li>
-                  <li><a class="dropdown-item" href="#">10 mins</a></li>
-                  <li><a class="dropdown-item" href="#">15 mins</a></li>
-                  <li><a class="dropdown-item" href="#">1 hr</a></li>
-                  <li><a class="dropdown-item" href="#">4 hrs</a></li>
-                  <li><a class="dropdown-item" href="#">6 hrs</a></li>
-                  <li><a class="dropdown-item" href="#">Daily</a></li>
-                </ul>
-              </div >
+            <div class="form-group">
+              <label for="frequency">Select Frequency : </label>
+              <select
+                type="frequency"
+                class="form-control"
+                name="frequency"
+                id="frequency"
+              >
+                <option value="0.16">10 sec</option>
+                <option value="1">1 min</option>
+                <option value="5">5 mins</option>
+                <option value="10">10 mins</option>
+                <option value="15">15 mins</option>
+                <option value="60">1 hr</option>
+                <option value="240">4 hrs</option>
+                <option value="360">6 hrs</option>
+                <option value="1440">Daily</option>
+                
+              </select>
+            </div>
 
-              <div id="hidden" style="display: none;">
+              <div class="form-group" id="hidden" style="display: none;">
               <div class="form-group" >
                 <label for="email">Enter Email</label>
                 <input type="email" class="form-control" name="email" placeholder="Enter Email">
@@ -57,9 +64,6 @@
                document.getElementById('hid_btn').style.display="block";
                document.getElementById('hid_after').style.display="none";
             }
-            $('.dropdown-menu a').click(function(){
-            $('#selected').text($(this).text());
-            });
           </script>
     </div>
   </div>

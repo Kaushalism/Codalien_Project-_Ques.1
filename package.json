@@ -1,11 +1,11 @@
 {
-  "name": "website-change-monitor",
+  "name": "url-monitor",
   "version": "1.0.0",
-  "description": "",
+  "description": "for Codalien",
   "scripts": {
     "start": "nodemon server.js"
   },
-  "author": "Juanma Menendez",
+  "author": "Nitin Kaushal",
   "license": "MIT",
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
