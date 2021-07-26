@@ -69,7 +69,7 @@ app.post('/monitor', (req, res) =>{
     }, checkingFrequency);
 
 
-    res.render("service_started", {test : app.locals.url});
+    res.render("service_started");
 
 });
 
